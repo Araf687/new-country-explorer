@@ -27,7 +27,10 @@ const App = () => {
           setTempInfo(data);
         }
       })
-      .catch((error) => console.error(error))
+      .catch((error) =>{
+        console.error("error:",error)
+      })
+
     setTimeout(() => {
       setIsLoading(false);
     }, 3000); // Replace with your actual loading logic
@@ -37,7 +40,7 @@ const App = () => {
     return <SplashScreenComponent />
   }
 
-  return <LandingPage data={tempInfo} setData={setTempInfo} search={handleClickSearch} />
+  return <LandingPage data={countryInfo} setData={setCountryInfo} search={handleClickSearch} />
 };
 
 export default App;
