@@ -1,37 +1,63 @@
 import React, { useState } from 'react';
-import { View, Text, Button, TextInput, SafeAreaView, FlatList, Pressable } from 'react-native';
+import { View, Text, Button, TextInput, SafeAreaView, FlatList, Pressable, Modal } from 'react-native';
 import Card from './Card';
 import { StyleSheet } from 'react-native-web';
+import ViewCountryInfo from '../ViewCountryInfo/ViewCountryInfo';
+
 
 const LandingPage = (props) => {
-    const { data, setData,search } = props;
-    const [searchText, setSearchText] = useState("")
+    const { data, resetData, search } = props;
+    const [searchText, setSearchText] = useState("");
+    const [viewInfo, setViewInfo] = useState(false);
+    const [viewData, setViewData] = useState({})
 
     const handleChangeCountryName = (text) => {
-        console.log(text);
         setSearchText(text);
+        console.log(text);
+        if (text === "") {
+            console.log("kk")
+            resetData();
+        }
+    }
+    const handleClickViewInfo = (item) => {
+        setViewData(item)
+        setViewInfo(true);
     }
 
+
+
     return (
-        <View style={{ width: "96%", margin: 6, marginTop: 10 }}>
+        <View style={{ width: "96%", margin: 6, marginTop: 20 , fontFamily: 'Cochin'}}>
             <View style={{ justifyContent: 'center', flexDirection: "row", alignItems: 'center', paddingVertical: 5 }}>
                 <TextInput
                     placeholder="Enter counrtry name.."
                     style={styles.searchInput}
                     onChangeText={handleChangeCountryName}
                 />
-                <Pressable >
-                    <View style={styles.searchButton}>
-                        <Button onPress={()=>{search(searchText)}} title='Search'  />
-                    </View>
+
+                <Pressable
+                    style={[styles.searchButton]}
+                    onPress={() => search(searchText) }>
+                    <Text style={styles.textStyle}>Search</Text>
                 </Pressable>
-
-
             </View>
-            {data.length > 0 && <SafeAreaView style={styles.container}>
+            {
+                viewInfo && <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={viewInfo}
+                    onRequestClose={() => {
+                        Alert.alert('Modal has been closed.');
+                        setViewInfo(!viewInfo);
+                    }}>
+                    <ViewCountryInfo data={viewData} setViewInfo={setViewInfo} />
+                </Modal>
+            }
+            {data.length > 0 && <SafeAreaView>
                 <FlatList
                     data={data}
-                    renderItem={(item, i) => <Card key={i} cardData={item} />}
+                    renderItem={(item, i) => <Card key={i} cardData={item} handleClickViewInfo={handleClickViewInfo} />}
+
                 />
             </SafeAreaView>}
         </View>
@@ -57,7 +83,40 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'blue',
         borderRadius: 5,
-        height: 40,
+        padding: 10,
+        elevation: 2,
+        backgroundColor: '#4630EB',
+    },
+    centeredView: {
+        flex: 1,
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+        flex: 1,
+    },
+    button: {
+        borderRadius: 10,
+        padding: 5,
+        elevation: 2,
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
     }
 });
 

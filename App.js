@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import SplashScreenComponent from './components/SplashScreen/SplashScreenComponent';
 import LandingPage from './components/LandingPage/LandingPage';
 import axios from 'axios';
+// import MapView from 'react-native-maps';
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,6 +14,9 @@ const App = () => {
       const tempData=tempInfo.filter(item=>item.name.official===searchText)
       setTempInfo(tempData)
     }
+  }
+  const resetData=()=>{
+    setTempInfo(countryInfo);
   }
 
   useEffect(() => {
@@ -40,7 +44,7 @@ const App = () => {
     return <SplashScreenComponent />
   }
 
-  return <LandingPage data={countryInfo} setData={setCountryInfo} search={handleClickSearch} />
+  return <LandingPage data={tempInfo} resetData={resetData} search={handleClickSearch} />
 };
 
 export default App;
